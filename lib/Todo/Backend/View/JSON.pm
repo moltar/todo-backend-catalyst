@@ -9,7 +9,10 @@ extends 'Catalyst::View::JSON';
 __PACKAGE__->config(
     {
         expose_stash      => 'json',
-        json_encoder_args => { canonical => 1 },
+        json_encoder_args => {
+            canonical => 1,
+            pretty    => 1,
+        },
     }
 );
 
