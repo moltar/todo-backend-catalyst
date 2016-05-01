@@ -17,23 +17,14 @@ has database => (
     required => 1,
 );
 
-=head2 items
-
-A storage for todo items. The storage is very primitive. It simply stores
-data in memory in a HashRef. The data will be lost upon server reload.
-
-Several handlers provided via L<Moose::Meta::Attribute::Native::Trait::Hash>:
-
-=cut
-
-has items => (
+has _items => (
     is      => 'ro',
     isa     => 'DBM::Deep',
     lazy    => 1,
-    builder => '_build_items',
+    builder => '_build__items',
 );
 
-sub _build_items {
+sub _build__items {
     my $self = shift;
 
     return DBM::Deep->new(
@@ -51,7 +42,7 @@ Get a todo item by ID.
 sub get {
     my ( $self, $item_id ) = @_;
 
-    my $item = $self->items->get( $item_id );
+    my $item = $self->_items->get( $item_id );
 
     ## shallow clone the item, because it might get modified later
     return { %{$item} };
@@ -71,7 +62,7 @@ sub list {
     ## Built in map function will call a block on each item ID, and get() the item (shallow cloned).
     ## Then we sort the items based on the order value.
     ## And finally return an ArrayRef of items.
-    return [ sort { $a->{order} <=> $b->{order} } map { $self->get( $_ ) } keys %{ $self->items } ];
+    return [ sort { $a->{order} <=> $b->{order} } map { $self->get( $_ ) } keys %{ $self->_items } ];
 }
 
 =head2 add( \%item )
@@ -84,7 +75,8 @@ sub add {
     my ( $self, $item ) = @_;
 
     my $item_id = $self->_generate_item_id;
-    $self->items->put(
+
+    $self->_items->put(
         $item_id,
         {
             # default value
@@ -117,7 +109,7 @@ sub edit {
         $changes->{completed} = $changes->{completed} ? 1 : 0;
     }
 
-    if ( my $item = $self->items->get( $item_id ) ) {
+    if ( my $item = $self->_items->get( $item_id ) ) {
         foreach my $key ( keys %{$changes} ) {
             $item->{$key} = $changes->{$key};
         }
@@ -137,7 +129,7 @@ Remove all items from the todo list.
 sub clear {
     my ( $self ) = @_;
 
-    return $self->items->clear;
+    return $self->_items->clear;
 }
 
 =head2 delete( $item_id )
@@ -149,7 +141,7 @@ Delete a single item given a C<$item_id>.
 sub delete {
     my ( $self, $item_id ) = @_;
 
-    return $self->items->delete( $item_id );
+    return $self->_items->delete( $item_id );
 }
 
 #--------------------------------------------------------------------------#
