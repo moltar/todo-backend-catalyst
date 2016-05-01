@@ -36,7 +36,10 @@ has items => (
 sub _build_items {
     my $self = shift;
 
-    return DBM::Deep->new( $self->database );
+    return DBM::Deep->new(
+        file    => $self->database,
+        locking => 1,
+    );
 }
 
 =head2 get( $item_id )
