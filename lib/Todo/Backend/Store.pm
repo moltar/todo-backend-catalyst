@@ -109,6 +109,11 @@ sub edit {
         $changes->{completed} = $changes->{completed} ? 1 : 0;
     }
 
+    ## Cannot change the ID
+    if ( exists $changes->{id} ) {
+        delete $changes->{id};
+    }
+
     if ( my $item = $self->_items->get( $item_id ) ) {
         foreach my $key ( keys %{$changes} ) {
             $item->{$key} = $changes->{$key};
