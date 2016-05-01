@@ -44,6 +44,8 @@ sub get {
 
     my $item = $self->_items->get( $item_id );
 
+    return unless $item;
+
     ## shallow clone the item, because it might get modified later
     return { %{$item} };
 }

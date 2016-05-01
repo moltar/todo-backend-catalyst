@@ -2,6 +2,7 @@ package Todo::Backend::Controller::Root;
 
 use Moose;
 use JSON::MaybeXS;
+use HTTP::Status qw(HTTP_NOT_FOUND HTTP_CREATED HTTP_NO_CONTENT);
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller' }
@@ -87,6 +88,10 @@ sub get_item : Chained('base') PathPart('') Args(1) GET {
     my ( $self, $c, $item_id ) = @_;
 
     $c->stash->{json} = $c->model->get( $item_id );
+
+    unless ( $c->stash->{json} ) {
+        $c->res->status( HTTP_NOT_FOUND );
+    }
 }
 
 =head2 create_item
@@ -99,6 +104,7 @@ sub create_item : Chained('base') PathPart('') Args(0) POST {
     my ( $self, $c ) = @_;
 
     $c->stash->{json} = $c->model->add( $c->stash->{params} );
+    $c->res->status( HTTP_CREATED );
 }
 
 =head2 delete_item
@@ -111,7 +117,7 @@ sub delete_item : Chained('base') PathPart('') Args(1) DELETE {
     my ( $self, $c, $item_id ) = @_;
 
     $c->model->delete( $item_id );
-    $c->stash->{json} = [];
+    $c->res->status( HTTP_NO_CONTENT );
 }
 
 =head2 edit_item

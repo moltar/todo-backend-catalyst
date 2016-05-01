@@ -10,8 +10,9 @@ __PACKAGE__->config(
     {
         expose_stash      => 'json',
         json_encoder_args => {
-            canonical => 1,
-            pretty    => 1,
+            canonical    => 1,
+            pretty       => 1,
+            allow_nonref => 1,
         },
     }
 );
