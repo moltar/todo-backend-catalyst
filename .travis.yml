@@ -1,10 +1,19 @@
 language: perl
 perl:
-  - "5.16"
-  - "5.22"
+  - '5.16'
+  - '5.22'
 before_install:
   - cpanm Carton
 install:
   - carton install
 script:
   - carton exec -- prove -lrv t/
+deploy:
+  provider: heroku
+  buildpack: https://github.com/miyagawa/heroku-buildpack-perl.git
+  app: todo-backend-catalyst
+  api_key:
+    secure: HdrEsZWGt1bUWm1wRQDXqBCbwMJoHpa6iTpuo2lAOJqbnga/EAf/Ui8Px9q8kJC1X2xhWc01bfBteFjHo1viVdcEMo9Q+FYpkLxjp315J4WOZWE2oXI8x8EXnKs7SyfOQtafS0ZccPhbV5vOgf2Wl4kAy1Zr5MEoNFVi3bvhSmNWwZWz5ZLnS6qzuP6SmtF4CAokMk5fuw+8WhU4MPhymKI4lzj2YrMhCvKm7rrRKQQA6AlAeAHJHtjsUA6j+3+jCZembfOgcbS+c9O9/6Gkq2LDVZ7f0CXFufMuTvVfO5OujQmR09KzaVTgT+v7KqhqhcIuo1WU27RnA/i+ot5RvMikViX1qbTQAK/YLjLauRQS9CqCLEZY1KABNGMUShx+tP9IGqWrgxDov/5oxeCCJQZ4a/AklbTyHLTcPp/PIYzCEdvWOs+oj8viBcUhfYobGFf+yFvW0WmlAEGXXEkbhK2aj4ZBNiSGsgJ/XsRC83pRrQ3F0+zr9iHFCWVViMYNQ6Niy8dT3oSTealWJHxqPp5e3MbDtRhkJbWPavud501l7RyiRrJdXCrzsCKRQBY58Sxv1+rGbfqlx7WlJdefu8i+Snpvk7qPq3Um6svrTQlY5Sv09kO1UFYN41cqpcVM2C1PdzHyoB9QZnQ7OO5YzjaeqjHge6D0Ho7WbA9Gsms=
+  after_deploy:
+    - CATALYST_SERVER=https://todo-backend-catalyst.herokuapp.com/ prove -lrv t/01app.t
+    - curl -X DELETE https://todo-backend-catalyst.herokuapp.com/
