@@ -57,11 +57,11 @@ Return a list of ordered todo items.
 sub list {
     my ( $self ) = @_;
 
-    ## Slightly hairy "one linger". Let's start from the end.
-    ## Get a list of item IDs.
-    ## Built in map function will call a block on each item ID, and get() the item (shallow cloned).
-    ## Then we sort the items based on the order value.
-    ## And finally return an ArrayRef of items.
+    ## Slightly hairy "one liner". Let's break it down from the end.
+    ## 1. Get a list of item IDs.
+    ## 2. Built in map function will call a block on each item ID, and get() the item (shallow cloned).
+    ## 3. Then we sort the items based on the order value.
+    ## 4. And finally return an ArrayRef of items [ ... ].
     return [ sort { $a->{order} <=> $b->{order} } map { $self->get( $_ ) } keys %{ $self->_items } ];
 }
 
