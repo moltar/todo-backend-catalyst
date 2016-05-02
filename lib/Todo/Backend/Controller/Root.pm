@@ -16,13 +16,20 @@ __PACKAGE__->config( namespace => '' );
 
 =head1 NAME
 
-Todo::Backend::Controller::Root - Root Controller for Todo::Backend
+Todo::Backend::Controller::Root - Controller for Todo::Backend
 
 =head1 DESCRIPTION
 
-[enter your description here]
+A controller for managing a todo list.
 
 =head1 METHODS
+
+=cut
+
+=head2 base
+
+Base method for all actions in the current controller. All of the actions are
+chaining off of this one.
 
 =cut
 
@@ -44,7 +51,7 @@ sub list_items : Chained('base') PathPart('') Args(0) GET {
 
 =head2 clear_list
 
-Remove all items from the list.
+Remove all items from the todo list.
 
 =cut
 
@@ -100,7 +107,7 @@ sub delete_item : Chained('base') PathPart('') Args(1) DELETE {
 
 =head2 edit_item
 
-Modify todo item.
+Modify a todo item.
 
 =cut
 
