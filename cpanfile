@@ -3,6 +3,7 @@ requires 'Catalyst::Model::Adaptor';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Runtime';
 requires 'Catalyst::View::JSON';
+requires 'CatalystX::RoleApplicator';
 requires 'Config::General';
 requires 'DBM::Deep';
 requires 'Plack::Middleware::CrossOrigin';

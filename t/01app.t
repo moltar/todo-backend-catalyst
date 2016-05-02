@@ -159,7 +159,7 @@ subtest 'tracking todo order' => sub {
         my ( $method, $uri, $data ) = @_;
         $json ||= JSON::MaybeXS->new( utf8 => 1 );
 
-        my $header = [];
+        my $header = [ 'Content-Type', 'application/json' ];
         my $content = $data ? $json->encode( $data ) : q{};
 
         my $res = request( HTTP::Request->new( uc( $method ), $uri, $header, $content ) );

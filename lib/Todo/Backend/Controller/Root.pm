@@ -1,7 +1,6 @@
 package Todo::Backend::Controller::Root;
 
 use Moose;
-use JSON::MaybeXS;
 use HTTP::Status qw(HTTP_NOT_FOUND HTTP_CREATED HTTP_NO_CONTENT);
 use namespace::autoclean;
 
@@ -12,22 +11,6 @@ BEGIN { extends 'Catalyst::Controller' }
 # so they function identically to actions created in MyApp.pm
 #
 __PACKAGE__->config( namespace => '' );
-
-=head2 json
-
-=cut
-
-has json => (
-    is      => 'ro',
-    lazy    => 1,
-    builder => '_build_json',
-);
-
-sub _build_json {
-    my $self = shift;
-
-    return JSON::MaybeXS->new( utf8 => 1 );
-}
 
 =encoding utf-8
 
@@ -45,12 +28,6 @@ Todo::Backend::Controller::Root - Root Controller for Todo::Backend
 
 sub base : Chained('/') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
-
-    ## quite an ugly hack to get JSON decoder to work for PATCH
-    ## unfortunately body_data accessor only works for POST and PUT methods
-    if ( $c->request->body ) {
-        $c->stash->{params} = $c->req->data_handlers->{'application/json'}->( $c->request->body, $c->req );
-    }
 }
 
 =head2 list_items
@@ -103,7 +80,7 @@ Create a new todo item.
 sub create_item : Chained('base') PathPart('') Args(0) POST {
     my ( $self, $c ) = @_;
 
-    $c->stash->{json} = $c->model->add( $c->stash->{params} );
+    $c->stash->{json} = $c->model->add( $c->req->json );
     $c->res->status( HTTP_CREATED );
 }
 
@@ -129,7 +106,7 @@ Modify todo item.
 sub edit_item : Chained('base') PathPart('') Args(1) PATCH {
     my ( $self, $c, $item_id ) = @_;
 
-    $c->stash->{json} = $c->model->edit( $item_id, $c->stash->{params} );
+    $c->stash->{json} = $c->model->edit( $item_id, $c->req->json );
 }
 
 =head2 end

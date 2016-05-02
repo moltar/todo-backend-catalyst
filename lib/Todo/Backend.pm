@@ -4,14 +4,16 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
-
 use Catalyst qw(
   ConfigLoader
 );
+use CatalystX::RoleApplicator;
 
 extends 'Catalyst';
 
 our $VERSION = '0.01';
+
+__PACKAGE__->apply_request_class_roles( qw(Todo::Backend::TraitFor::Request::JSON) );
 
 # Configure the application.
 #
