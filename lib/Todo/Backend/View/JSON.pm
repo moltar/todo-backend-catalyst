@@ -8,7 +8,7 @@ extends 'Catalyst::View::JSON';
 
 __PACKAGE__->config(
     {
-        expose_stash      => 'json',
+        expose_stash      => '__json',
         json_encoder_args => {
             canonical    => 1,
             pretty       => 1,
@@ -20,7 +20,7 @@ __PACKAGE__->config(
 before process => sub {
     my ( $self, $c ) = @_;
 
-    my $ref = $c->stash->{ $self->expose_stash };
+    my $ref = $c->res->json;
 
     if ( $ref && ref( $ref ) eq 'HASH' ) {
         $self->filter( $c, $ref );
@@ -30,6 +30,8 @@ before process => sub {
             $self->filter( $c, $item );
         }
     }
+
+    $c->stash->{ $self->expose_stash } = $ref;
 };
 
 sub filter {

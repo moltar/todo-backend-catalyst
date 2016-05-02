@@ -39,7 +39,7 @@ Returns a list of todos.
 sub list_items : Chained('base') PathPart('') Args(0) GET {
     my ( $self, $c ) = @_;
 
-    $c->stash->{json} = $c->model->list;
+    $c->res->json( $c->model->list );
 }
 
 =head2 clear_list
@@ -52,7 +52,7 @@ sub clear_list : Chained('base') PathPart('') Args(0) DELETE {
     my ( $self, $c ) = @_;
 
     $c->model->clear;
-    $c->stash->{json} = [];
+    $c->res->json( [] );
 }
 
 =head2 get_item
@@ -64,9 +64,10 @@ Get a single todo item given item ID.
 sub get_item : Chained('base') PathPart('') Args(1) GET {
     my ( $self, $c, $item_id ) = @_;
 
-    $c->stash->{json} = $c->model->get( $item_id );
-
-    unless ( $c->stash->{json} ) {
+    if ( my $item = $c->model->get( $item_id ) ) {
+        $c->res->json( $item );
+    }
+    else {
         $c->res->status( HTTP_NOT_FOUND );
     }
 }
@@ -80,7 +81,7 @@ Create a new todo item.
 sub create_item : Chained('base') PathPart('') Args(0) POST {
     my ( $self, $c ) = @_;
 
-    $c->stash->{json} = $c->model->add( $c->req->json );
+    $c->res->json( $c->model->add( $c->req->json ) );
     $c->res->status( HTTP_CREATED );
 }
 
@@ -106,7 +107,7 @@ Modify todo item.
 sub edit_item : Chained('base') PathPart('') Args(1) PATCH {
     my ( $self, $c, $item_id ) = @_;
 
-    $c->stash->{json} = $c->model->edit( $item_id, $c->req->json );
+    $c->res->json( $c->model->edit( $item_id, $c->req->json ) );
 }
 
 =head2 end

@@ -14,6 +14,7 @@ extends 'Catalyst';
 our $VERSION = '0.01';
 
 __PACKAGE__->apply_request_class_roles( qw(Todo::Backend::TraitFor::Request::JSON) );
+__PACKAGE__->apply_response_class_roles( qw(Todo::Backend::TraitFor::Response::JSON) );
 
 # Configure the application.
 #
