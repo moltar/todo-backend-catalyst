@@ -4,7 +4,6 @@ use warnings;
 use lib './lib';
 use Todo::Backend;
 use Plack::Builder;
-use Plack::Middleware::CrossOrigin;
 
 my $app = Todo::Backend->apply_default_middlewares( Todo::Backend->psgi_app );
 
