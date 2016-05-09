@@ -14,7 +14,7 @@ builder {
     enable 'CrossOrigin',
       origins => '*',
       methods => '*',
-      headers => ['Content-Type'];
+      headers => '*';
 
     $app;
 };
