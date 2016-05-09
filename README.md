@@ -22,6 +22,6 @@ Live demo can be found here: [https://todo-backend-catalyst.herokuapp.com/](http
 To get started locally, you can use [Carton](https://metacpan.org/pod/Carton) to install the dependencies.
 
 ```sh
-carton install --deployment
+carton install
 carton exec -- plackup app.psgi
 ```
