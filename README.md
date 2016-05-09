@@ -23,5 +23,5 @@ To get started locally, you can use [Carton](https://metacpan.org/pod/Carton) to
 
 ```sh
 carton install --deployment
-carton exec -- plackup -I lib app.psgi
+carton exec -- plackup app.psgi
 ```
